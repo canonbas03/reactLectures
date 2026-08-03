@@ -35,6 +35,11 @@ function App() {
         <section id="core-concepts">
           <h2>Core Concepts</h2>
           <ul>
+            {CORE_CONCEPTS.map((conceptItem) => (
+              <CoreConcept key={conceptItem.title} {...conceptItem} />
+            ))}
+          </ul>
+          <ul>
             <CoreConcept
               title="Comp1"
               description="Description for comp1"
