@@ -11,6 +11,7 @@ function App() {
   function handleSelect(selectedButton) {
     setSelectedTopic(selectedButton);
     console.log(selectedTopic);
+    console.log(selectedButton);
   }
 
   console.log("APP COMPONENT EXECUTING");
