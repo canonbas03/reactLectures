@@ -2,12 +2,12 @@ import { ElementType, ReactNode } from "react";
 
 type TabsProps = {
   children: ReactNode;
-  ButtonsContainer: ElementType;
   buttons: ReactNode;
+  ButtonsContainer?: ElementType;
 };
 export default function Tabs({
   children,
-  ButtonsContainer,
+  ButtonsContainer = "menu",
   buttons,
 }: TabsProps) {
   return (
