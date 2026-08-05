@@ -1,13 +1,18 @@
-import { ReactNode } from "react";
+import { ElementType, ReactNode } from "react";
 
 type TabsProps = {
   children: ReactNode;
+  ButtonsContainer: ElementType;
   buttons: ReactNode;
 };
-export default function Tabs({ children, buttons }: TabsProps) {
+export default function Tabs({
+  children,
+  ButtonsContainer,
+  buttons,
+}: TabsProps) {
   return (
     <>
-      <menu>{buttons}</menu>
+      <ButtonsContainer>{buttons}</ButtonsContainer>
       {children}
     </>
   );
