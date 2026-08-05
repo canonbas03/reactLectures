@@ -1,13 +1,12 @@
-import { ReactNode } from "react";
+import { ComponentPropsWithoutRef, ReactNode } from "react";
 
 type SectionProps = {
-  id: string;
-  title: string;
+  title?: string;
   children: ReactNode;
-};
-export default function Section({ id, title, children }: SectionProps) {
+} & ComponentPropsWithoutRef<"section">;
+export default function Section({ title, children, ...props }: SectionProps) {
   return (
-    <section id={id}>
+    <section {...props}>
       {title && <h2>{title}</h2>}
       {children}
     </section>
