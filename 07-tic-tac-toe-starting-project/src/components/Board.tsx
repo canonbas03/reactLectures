@@ -1,22 +1,31 @@
 import { useState } from "react";
 
-type PlayerSymbol = "X" | "O" | null;
+export type PlayerSymbol = "X" | "O" | null;
 const initialBoard: PlayerSymbol[][] = [
   [null, null, null],
   [null, null, null],
   [null, null, null],
 ];
 
-export default function Board() {
+type BoardProps = {
+  onSelectSquare: () => void;
+  activePlayerSymbol: PlayerSymbol;
+};
+export default function Board({
+  onSelectSquare,
+  activePlayerSymbol,
+}: BoardProps) {
   const [gameBoard, setGameBoard] = useState(initialBoard);
 
   function handleSelectSquare(rowIndex: number, colIndex: number) {
     setGameBoard((prevBoard) => {
       const updatedBoard = [...prevBoard.map((innerArray) => [...innerArray])];
-      updatedBoard[rowIndex][colIndex] = "X";
+      updatedBoard[rowIndex][colIndex] = activePlayerSymbol;
 
       return updatedBoard;
     });
+
+    onSelectSquare();
   }
   return (
     <ol id="game-board">
