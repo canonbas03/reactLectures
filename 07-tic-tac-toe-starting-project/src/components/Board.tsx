@@ -1,11 +1,7 @@
 import { useState } from "react";
 
 export type PlayerSymbol = "X" | "O" | null;
-const initialBoard: PlayerSymbol[][] = [
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
+
 export type GameTurnsProps = {
   square: { row: number; col: number };
   player: PlayerSymbol;
@@ -13,20 +9,20 @@ export type GameTurnsProps = {
 
 type BoardProps = {
   onSelectSquare: (rowIndex: number, colIndex: number) => void;
-  turns: GameTurnsProps[];
+  board: PlayerSymbol[][];
 };
-export default function Board({ onSelectSquare, turns }: BoardProps) {
-  let gameBoard = initialBoard;
-  for (const turn of turns) {
-    const { square, player } = turn;
-    const { row, col } = square;
+export default function Board({ onSelectSquare, board }: BoardProps) {
+  // let gameBoard = initialBoard;
+  // for (const turn of turns) {
+  //   const { square, player } = turn;
+  //   const { row, col } = square;
 
-    gameBoard[row][col] = player;
-  }
+  //   gameBoard[row][col] = player;
+  // }
 
   return (
     <ol id="game-board">
-      {gameBoard.map((row, rowIndex) => (
+      {board.map((row, rowIndex) => (
         <li key={rowIndex}>
           <ol>
             {row.map((playerSymbol, colIndex) => (
