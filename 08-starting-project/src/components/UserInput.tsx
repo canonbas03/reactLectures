@@ -62,7 +62,7 @@ export default function UserInput({ userInput, onChange }: UserInputProps) {
             id="duration"
             value={userInput.duration}
             type="number"
-            min={0}
+            min={1}
             required
             onChange={(event) =>
               onChange("duration", Number(event.target.value))
