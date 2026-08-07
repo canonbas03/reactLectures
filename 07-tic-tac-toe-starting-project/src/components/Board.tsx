@@ -12,14 +12,6 @@ type BoardProps = {
   board: PlayerSymbol[][];
 };
 export default function Board({ onSelectSquare, board }: BoardProps) {
-  // let gameBoard = initialBoard;
-  // for (const turn of turns) {
-  //   const { square, player } = turn;
-  //   const { row, col } = square;
-
-  //   gameBoard[row][col] = player;
-  // }
-
   return (
     <ol id="game-board">
       {board.map((row, rowIndex) => (
