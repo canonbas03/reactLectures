@@ -1,9 +1,9 @@
 import { useState } from "react";
-import Board from "./components/Board";
-import Player from "./components/Player";
-import { PlayerSymbol } from "./components/Board";
-import Log from "./components/Log";
-import { GameTurnsProps } from "./components/Board";
+import Board from "./components/Board.js";
+import Player from "./components/Player.js";
+import { PlayerSymbol } from "./components/Board.js";
+import Log from "./components/Log.js";
+import { GameTurnsProps } from "./components/Board.js";
 import { WINNING_COMBINATIONS } from "./winning-combinations.js";
 import GameOver from "./components/GameOver.js";
 const INITIAL_BOARD: PlayerSymbol[][] = [
