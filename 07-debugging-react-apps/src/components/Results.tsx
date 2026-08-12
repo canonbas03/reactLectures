@@ -1,9 +1,23 @@
-import { calculateInvestmentResults, formatter } from '../util/investment.js';
+import { calculateInvestmentResults, formatter } from "../util/investment.js";
+import { UserInputData } from "./UserInput.js";
 
+type calculatedData = {
+  year: number;
+  interest: number;
+  valueEndOfYear: number;
+  annualInvestment: number;
+};
 
-export default function Results({ input }) {
-  const results = [];
+type ResultsProp = {
+  input: UserInputData;
+};
+
+export default function Results({ input }: ResultsProp) {
+  const results: calculatedData[] = [];
   calculateInvestmentResults(input, results);
+  if (results.length === 0) {
+    return <p>Provide valid duration!</p>;
+  }
   const initialInvestment =
     results[0].valueEndOfYear -
     results[0].interest -

@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import Header from './components/Header.jsx';
-import UserInput from './components/UserInput.jsx';
-import Results from './components/Results.jsx';
+import Header from "./components/Header.js";
+import UserInput from "./components/UserInput.js";
+import Results from "./components/Results.js";
 
 function App() {
   const [userInput, setUserInput] = useState({
@@ -12,7 +12,7 @@ function App() {
     duration: 10,
   });
 
-  function handleChange(inputIdentifier, newValue) {
+  function handleChange(inputIdentifier: string, newValue: number) {
     setUserInput((prevUserInput) => {
       return {
         ...prevUserInput,
