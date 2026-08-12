@@ -13,7 +13,7 @@ export default function Player({
   isActive,
   onChangeName,
 }: PlayerProps) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState<boolean | null>(false);
   const [playerName, setPlayerName] = useState(initialName);
   let editablePlayerName = <span className="player-name">{playerName}</span>;
   let buttonText = "Edit";
