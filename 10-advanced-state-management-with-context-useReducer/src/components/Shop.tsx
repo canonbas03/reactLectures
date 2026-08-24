@@ -3,7 +3,6 @@ import Product from "./Product";
 
 type ShopProps = {
   children?: React.ReactNode;
-  //onAddItemToCart: (id: string) => void;
 };
 export default function Shop({ children }: ShopProps) {
   return (

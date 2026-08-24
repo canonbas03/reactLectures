@@ -1,21 +1,26 @@
-import { forwardRef, Ref, useImperativeHandle, useRef } from "react";
+import {
+  forwardRef,
+  Ref,
+  useContext,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { createPortal } from "react-dom";
 import Cart, { ItemType } from "./Cart";
-import { CartModalHandle } from "./Header";
+import { CartContext } from "../store/shopping-cart-context";
 
+export type CartModalHandle = {
+  open: () => void;
+};
 type CartModalProps = {
   children?: React.ReactNode;
   ref?: Ref<CartModalHandle>;
-  cartItems: ItemType[];
-  onUpdateCartItemQuantity: (productId: string, amount: number) => void;
+
   title: string;
-  actions: React.ReactNode;
 };
-const CartModal = forwardRef(function Modal(
-  { cartItems, onUpdateCartItemQuantity, title, actions }: CartModalProps,
-  ref,
-) {
+const CartModal = forwardRef(function Modal({ title }: CartModalProps, ref) {
   const dialog = useRef<HTMLDialogElement>(null);
+  const { items } = useContext(CartContext);
 
   useImperativeHandle(ref, () => {
     return {
@@ -31,12 +36,22 @@ const CartModal = forwardRef(function Modal(
   if (!modalRoot) {
     return null;
   }
+
+  let modalActions = <button>Close</button>;
+  if (items.length > 0) {
+    modalActions = (
+      <>
+        <button>Close</button>
+        <button>Checkout</button>
+      </>
+    );
+  }
   return createPortal(
     <dialog id="modal" ref={dialog}>
       <h2>{title}</h2>
-      <Cart items={cartItems} onUpdateItemQuantity={onUpdateCartItemQuantity} />
+      <Cart />
       <form method="dialog" id="modal-actions">
-        {actions}
+        {modalActions}
       </form>
     </dialog>,
     modalRoot,

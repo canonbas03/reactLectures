@@ -1,25 +1,11 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
+import { CartContext } from "../store/shopping-cart-context";
+import CartModal, { CartModalHandle } from "./CartModal";
 
-import CartModal from "./CartModal";
-import { ItemType } from "./Cart";
-export type CartModalHandle = {
-  open: () => void;
-};
-type Cart = {
-  items: ItemType[];
-};
-
-type HeaderProps = {
-  cart: Cart;
-  onUpdateCartItemQuantity: (productId: string, amount: number) => void;
-};
-export default function Header({
-  cart,
-  onUpdateCartItemQuantity,
-}: HeaderProps) {
-  const modal = useRef<CartModalHandle>();
-
-  const cartQuantity = cart.items.length;
+export default function Header() {
+  const { items } = useContext(CartContext);
+  const modal = useRef<CartModalHandle>(null);
+  const cartQuantity = items.length;
 
   function handleOpenCartClick() {
     if (modal.current) {
@@ -27,26 +13,9 @@ export default function Header({
     }
   }
 
-  let modalActions = <button>Close</button>;
-
-  if (cartQuantity > 0) {
-    modalActions = (
-      <>
-        <button>Close</button>
-        <button>Checkout</button>
-      </>
-    );
-  }
-
   return (
     <>
-      <CartModal
-        ref={modal}
-        cartItems={cart.items}
-        onUpdateCartItemQuantity={onUpdateCartItemQuantity}
-        title="Your Cart"
-        actions={modalActions}
-      />
+      <CartModal ref={modal} title="Your Cart" />
       <header id="main-header">
         <div id="main-title">
           <img src="logo.png" alt="Elegant model" />
