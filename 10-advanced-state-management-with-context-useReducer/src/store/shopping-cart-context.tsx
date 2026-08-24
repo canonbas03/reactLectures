@@ -44,7 +44,7 @@ function shoppingCartReducer(state: CartState, action: CartActions) {
       const product = DUMMY_PRODUCTS.find(
         (product) => product.id === action.payload.id,
       );
-      if (product && action.payload.id) {
+      if (product) {
         updatedItems.push({
           id: action.payload.id,
           name: product.title,
