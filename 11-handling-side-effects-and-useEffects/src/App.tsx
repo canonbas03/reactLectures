@@ -1,32 +1,48 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Places, { Place } from "./components/Places";
 import { AVAILABLE_PLACES } from "./data.js";
 import Modal from "./components/Modal";
 import DeleteConfirmation from "./components/DeleteConfirmation";
 import logoImg from "./assets/logo.png";
+import { sortPlacesByDistance } from "./loc.js";
 
 type HandleMessageModel = {
   open: () => void;
   close: () => void;
 };
-
+const rawData = localStorage.getItem("selectedPlaces");
+const storedIds = rawData ? JSON.parse(rawData) : [];
+const storedPlaces = storedIds.map((id: string) =>
+  AVAILABLE_PLACES.find((place) => place.id === id),
+);
 function App() {
   const modal = useRef<HandleMessageModel>(null);
   const selectedPlace = useRef<string | null>(null);
-  const [pickedPlaces, setPickedPlaces] = useState<Place[]>([]);
+  const [pickedPlaces, setPickedPlaces] = useState<Place[]>(storedPlaces);
+  const [availablePlaces, setAvailablePlaces] = useState<Place[]>([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const sortedPlaces: Place[] = sortPlacesByDistance(
+        AVAILABLE_PLACES,
+        position.coords.latitude,
+        position.coords.longitude,
+      );
+
+      setAvailablePlaces(sortedPlaces);
+    });
+  }, []);
 
   function handleStartRemovePlace(id: string) {
-    if (modal.current) {
-      modal.current.open();
-    }
+    setModalIsOpen(true);
+
     selectedPlace.current = id;
   }
 
   function handleStopRemovePlace() {
-    if (modal.current) {
-      modal.current.close();
-    }
+    setModalIsOpen(false);
   }
 
   function handleSelectPlace(id: string) {
@@ -38,18 +54,27 @@ function App() {
       if (!place) return prevPickedPlaces;
       return [place, ...prevPickedPlaces];
     });
+
+    if (storedIds.indexOf(id) === -1) {
+      localStorage.setItem(
+        "selectedPlaces",
+        JSON.stringify([id, ...storedIds]),
+      );
+    }
   }
 
   function handleRemovePlace() {
     setPickedPlaces((prevPickedPlaces) =>
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current),
     );
-    if (modal.current) modal.current.close();
+    setModalIsOpen(false);
+
+    // Add local storage setter
   }
 
   return (
     <>
-      <Modal ref={modal}>
+      <Modal open={modalIsOpen}>
         <DeleteConfirmation
           onCancel={handleStopRemovePlace}
           onConfirm={handleRemovePlace}
@@ -73,7 +98,7 @@ function App() {
         />
         <Places
           title="Available Places"
-          places={AVAILABLE_PLACES}
+          places={availablePlaces}
           onSelectPlace={handleSelectPlace}
         />
       </main>
