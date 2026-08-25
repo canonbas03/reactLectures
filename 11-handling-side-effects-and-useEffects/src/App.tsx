@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import Places, { Place } from "./components/Places";
 import { AVAILABLE_PLACES } from "./data.js";
@@ -11,7 +11,8 @@ type HandleMessageModel = {
   open: () => void;
   close: () => void;
 };
-const rawData = localStorage.getItem("selectedPlaces");
+const LOCAL_STORAGE_KEY = "selectedPlaces";
+const rawData = localStorage.getItem(LOCAL_STORAGE_KEY);
 const storedIds = rawData ? JSON.parse(rawData) : [];
 const storedPlaces = storedIds.map((id: string) =>
   AVAILABLE_PLACES.find((place) => place.id === id),
@@ -63,14 +64,17 @@ function App() {
     }
   }
 
-  function handleRemovePlace() {
+  const handleRemovePlace = useCallback(function handleRemovePlace() {
     setPickedPlaces((prevPickedPlaces) =>
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current),
     );
     setModalIsOpen(false);
 
-    // Add local storage setter
-  }
+    const updatedIds = storedIds.filter(
+      (id: string) => id !== selectedPlace.current,
+    );
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedIds));
+  }, []);
 
   return (
     <>

@@ -8,16 +8,6 @@ type ModalProps = {
 function Modal({ children, open }: ModalProps) {
   const dialog = useRef<HTMLDialogElement>(null);
 
-  // useImperativeHandle(ref, () => {
-  //   return {
-  //     open: () => {
-  //       if (dialog.current) dialog.current.showModal();
-  //     },
-  //     close: () => {
-  //       if (dialog.current) dialog.current.close();
-  //     },
-  //   };
-  // });
   const modalId = document.getElementById("modal");
   if (!modalId) return null;
 
