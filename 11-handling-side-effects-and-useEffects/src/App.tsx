@@ -14,9 +14,8 @@ type HandleMessageModel = {
 const LOCAL_STORAGE_KEY = "selectedPlaces";
 const rawData = localStorage.getItem(LOCAL_STORAGE_KEY);
 const storedIds = rawData ? JSON.parse(rawData) : [];
-const storedPlaces = storedIds.map((id: string) =>
-  AVAILABLE_PLACES.find((place) => place.id === id),
-);
+const storedPlaces = storedIds.map((id: string) => AVAILABLE_PLACES.find((place) => place.id === id));
+
 function App() {
   const modal = useRef<HandleMessageModel>(null);
   const selectedPlace = useRef<string | null>(null);
@@ -57,41 +56,28 @@ function App() {
     });
 
     if (storedIds.indexOf(id) === -1) {
-      localStorage.setItem(
-        "selectedPlaces",
-        JSON.stringify([id, ...storedIds]),
-      );
+      localStorage.setItem("selectedPlaces", JSON.stringify([id, ...storedIds]));
     }
   }
 
   const handleRemovePlace = useCallback(function handleRemovePlace() {
-    setPickedPlaces((prevPickedPlaces) =>
-      prevPickedPlaces.filter((place) => place.id !== selectedPlace.current),
-    );
+    setPickedPlaces((prevPickedPlaces) => prevPickedPlaces.filter((place) => place.id !== selectedPlace.current));
     setModalIsOpen(false);
 
-    const updatedIds = storedIds.filter(
-      (id: string) => id !== selectedPlace.current,
-    );
+    const updatedIds = storedIds.filter((id: string) => id !== selectedPlace.current);
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedIds));
   }, []);
 
   return (
     <>
       <Modal open={modalIsOpen}>
-        <DeleteConfirmation
-          onCancel={handleStopRemovePlace}
-          onConfirm={handleRemovePlace}
-        />
+        <DeleteConfirmation onCancel={handleStopRemovePlace} onConfirm={handleRemovePlace} />
       </Modal>
 
       <header>
         <img src={logoImg} alt="Stylized globe" />
         <h1>PlacePicker</h1>
-        <p>
-          Create your personal collection of places you would like to visit or
-          you have visited.
-        </p>
+        <p>Create your personal collection of places you would like to visit or you have visited.</p>
       </header>
       <main>
         <Places
@@ -100,11 +86,7 @@ function App() {
           places={pickedPlaces}
           onSelectPlace={handleStartRemovePlace}
         />
-        <Places
-          title="Available Places"
-          places={availablePlaces}
-          onSelectPlace={handleSelectPlace}
-        />
+        <Places title="Available Places" places={availablePlaces} onSelectPlace={handleSelectPlace} />
       </main>
     </>
   );
