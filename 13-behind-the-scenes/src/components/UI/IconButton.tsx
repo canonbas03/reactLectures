@@ -1,7 +1,13 @@
-import { log } from '../../log.js';
+import { log } from "../../log.js";
+import { ComponentPropsWithoutRef, ElementType, ReactNode, memo } from "react";
 
-export default function IconButton({ children, icon, ...props }) {
-  log('<IconButton /> rendered', 2);
+type IconButtonProps = {
+  children: ReactNode;
+  icon: ElementType;
+} & ComponentPropsWithoutRef<"button">;
+
+const IconButton = memo(function IconButton({ children, icon, ...props }: IconButtonProps) {
+  log("<IconButton /> rendered", 2);
 
   const Icon = icon;
   return (
@@ -10,4 +16,5 @@ export default function IconButton({ children, icon, ...props }) {
       <span className="button-text">{children}</span>
     </button>
   );
-}
+});
+export default IconButton;

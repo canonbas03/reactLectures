@@ -1,7 +1,9 @@
-import { log } from '../../../log.js';
+import { ComponentPropsWithoutRef } from "react";
+import { log } from "../../../log.js";
 
-export default function MinusIcon(props) {
-  log('<MinusIcon /> rendered', 3);
+type MinusIconProps = ComponentPropsWithoutRef<"svg">;
+export default function MinusIcon(props: MinusIconProps) {
+  log("<MinusIcon /> rendered", 3);
 
   return (
     <svg

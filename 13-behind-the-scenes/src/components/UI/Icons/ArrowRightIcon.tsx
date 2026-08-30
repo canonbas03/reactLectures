@@ -1,7 +1,8 @@
-import { log } from '../../../log.js';
-
-export default function ArrowRightIcon(props) {
-  log('<ArrowRightIcon /> rendered', 3);
+import { ComponentPropsWithoutRef } from "react";
+import { log } from "../../../log.js";
+type ArrowRightIconProps = ComponentPropsWithoutRef<"svg">;
+export default function ArrowRightIcon(props: ArrowRightIconProps) {
+  log("<ArrowRightIcon /> rendered", 3);
 
   return (
     <svg
@@ -12,11 +13,7 @@ export default function ArrowRightIcon(props) {
       stroke="currentColor"
       {...props}
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
     </svg>
   );
 }
