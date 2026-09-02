@@ -14,13 +14,12 @@ export type Place = {
     alt: string;
   };
   lat: number;
-  lon: 0.0;
+  lon: number;
 };
 function App() {
   const selectedPlace = useRef<Place>();
 
   const [userPlaces, setUserPlaces] = useState<Place[]>([]);
-
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   function handleStartRemovePlace(place: Place) {
