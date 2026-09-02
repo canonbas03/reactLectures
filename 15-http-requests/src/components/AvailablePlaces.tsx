@@ -19,17 +19,17 @@ export default function AvailablePlaces({ onSelectPlace }: AvailablePlacesProps)
       setIsLoading(true);
 
       try {
-        const places = fetchAvailablePlaces();
+        const places = await fetchAvailablePlaces();
 
         navigator.geolocation.getCurrentPosition((position) => {
           const sortedPlaces = sortPlacesByDistance(places, position.coords.latitude, position.coords.longitude);
           setAvailablePlaces(sortedPlaces);
+          setIsLoading(false);
         });
       } catch (error) {
-        if (error instanceof Error) setError(error.message || "Couldnt fetch places, plese try again later");
+        if (error instanceof Error) setError(error.message || "Couldnt fetch places, please try again later");
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     }
     fetchPlaces();
   }, []);

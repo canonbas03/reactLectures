@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 
 type ModalProps = {
   open: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onClose: () => void;
 } & ComponentPropsWithRef<"dialog">;
 function Modal({ open, children, onClose }: ModalProps) {
