@@ -80,23 +80,26 @@ function App() {
     }
   }
 
-  const handleRemovePlace = useCallback(async function handleRemovePlace() {
-    if (selectedPlace.current) {
-      const selectedId = selectedPlace.current.id;
-      if (selectedId) {
-        setUserPlaces((prevPickedPlaces) => prevPickedPlaces.filter((place) => place.id !== selectedId));
+  const handleRemovePlace = useCallback(
+    async function handleRemovePlace() {
+      if (selectedPlace.current) {
+        const selectedId = selectedPlace.current.id;
+        if (selectedId) {
+          setUserPlaces((prevPickedPlaces) => prevPickedPlaces.filter((place) => place.id !== selectedId));
+        }
+
+        try {
+          await updateUserPlaces(userPlaces.filter((place) => place.id != selectedId));
+        } catch (error) {
+          setUserPlaces(userPlaces);
+          if (error instanceof Error) setErrorUpdatingPlaces(error.message || "Failed to delete place.");
+        }
       }
 
-      try {
-        await updateUserPlaces(userPlaces.filter((place) => place.id != selectedPlace.current?.id));
-      } catch (error) {
-        setUserPlaces(userPlaces);
-        if (error instanceof Error) setErrorUpdatingPlaces(error.message || "Failed to delete place.");
-      }
-    }
-
-    setModalIsOpen(false);
-  }, []);
+      setModalIsOpen(false);
+    },
+    [userPlaces],
+  );
 
   function handleErrorState() {
     setError(undefined);
