@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Place } from "../App.js";
 import Places from "./Places.jsx";
 import ErrorComponent from "./Error.js";
+import { sortPlacesByDistance } from "../loc.js";
 
 type AvailablePlacesProps = {
   onSelectPlace: (place: Place) => void;
@@ -10,7 +11,7 @@ type AvailablePlacesProps = {
 export default function AvailablePlaces({ onSelectPlace }: AvailablePlacesProps) {
   const [availablePlaces, setAvailablePlaces] = useState<Place[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error>();
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     async function fetchPlaces() {
@@ -23,9 +24,17 @@ export default function AvailablePlaces({ onSelectPlace }: AvailablePlacesProps)
         if (!response.ok) {
           throw new Error("Failed to fetch data.");
         }
-        setAvailablePlaces(resData.places);
+
+        navigator.geolocation.getCurrentPosition((position) => {
+          const sortedPlaces = sortPlacesByDistance(
+            resData.places,
+            position.coords.latitude,
+            position.coords.longitude,
+          );
+          setAvailablePlaces(sortedPlaces);
+        });
       } catch (error) {
-        if (error instanceof Error) setError(error);
+        if (error instanceof Error) setError(error.message || "Couldnt fetch places, plese try again later");
       }
 
       setIsLoading(false);
@@ -37,7 +46,7 @@ export default function AvailablePlaces({ onSelectPlace }: AvailablePlacesProps)
     setError(undefined);
   }
   if (error) {
-    return <ErrorComponent title="An error occured" message={error.message} onConfirm={handleErrorState} />;
+    return <ErrorComponent title="An error occured" message={error} onConfirm={handleErrorState} />;
   }
   return (
     <Places
