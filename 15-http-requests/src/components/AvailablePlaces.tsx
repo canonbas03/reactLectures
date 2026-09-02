@@ -3,6 +3,7 @@ import { Place } from "../App.js";
 import Places from "./Places.jsx";
 import ErrorComponent from "./Error.js";
 import { sortPlacesByDistance } from "../loc.js";
+import { fetchAvailablePlaces } from "../http.js";
 
 type AvailablePlacesProps = {
   onSelectPlace: (place: Place) => void;
@@ -18,19 +19,10 @@ export default function AvailablePlaces({ onSelectPlace }: AvailablePlacesProps)
       setIsLoading(true);
 
       try {
-        const response = await fetch("http://localhost:3000/places");
-        const resData = await response.json();
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch data.");
-        }
+        const places = fetchAvailablePlaces();
 
         navigator.geolocation.getCurrentPosition((position) => {
-          const sortedPlaces = sortPlacesByDistance(
-            resData.places,
-            position.coords.latitude,
-            position.coords.longitude,
-          );
+          const sortedPlaces = sortPlacesByDistance(places, position.coords.latitude, position.coords.longitude);
           setAvailablePlaces(sortedPlaces);
         });
       } catch (error) {
