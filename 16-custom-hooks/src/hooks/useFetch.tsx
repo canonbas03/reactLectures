@@ -8,6 +8,7 @@ export default function useFetch<T>(fetchFn: () => Promise<T>, initialState: T) 
   function handleErrorState() {
     setError("");
   }
+
   useEffect(() => {
     async function fetchData() {
       setIsFetching(true);
