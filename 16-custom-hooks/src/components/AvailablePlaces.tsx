@@ -1,42 +1,35 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Place } from "../App.js";
 import Places from "./Places.js";
 import ErrorComponent from "./Error.js";
 import { sortPlacesByDistance } from "../loc.js";
 import { fetchAvailablePlaces } from "../http.js";
+import useFetch from "../hooks/useFetch.js";
 
 type AvailablePlacesProps = {
   onSelectPlace: (place: Place) => void;
 };
 
 export default function AvailablePlaces({ onSelectPlace }: AvailablePlacesProps) {
-  const [availablePlaces, setAvailablePlaces] = useState<Place[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
+  const fetchSortedPlaces = useCallback(async function fetchSortedPlaces(): Promise<Place[]> {
+    const places = await fetchAvailablePlaces();
 
-  useEffect(() => {
-    async function fetchPlaces() {
-      setIsLoading(true);
+    return new Promise<Place[]>((resolve) => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const sortedPlaces: Place[] = sortPlacesByDistance(places, position.coords.latitude, position.coords.longitude);
 
-      try {
-        const places = await fetchAvailablePlaces();
-
-        navigator.geolocation.getCurrentPosition((position) => {
-          const sortedPlaces = sortPlacesByDistance(places, position.coords.latitude, position.coords.longitude);
-          setAvailablePlaces(sortedPlaces);
-          setIsLoading(false);
-        });
-      } catch (error) {
-        if (error instanceof Error) setError(error.message || "Couldnt fetch places, please try again later");
-        setIsLoading(false);
-      }
-    }
-    fetchPlaces();
+        resolve(sortedPlaces);
+      });
+    });
   }, []);
 
-  function handleErrorState() {
-    setError(undefined);
-  }
+  const {
+    fetchedData: availablePlaces,
+    isFetching: isLoading,
+    error,
+    handleErrorState,
+  } = useFetch<Place[]>(fetchSortedPlaces, []);
+
   if (error) {
     return <ErrorComponent title="An error occured" message={error} onConfirm={handleErrorState} />;
   }

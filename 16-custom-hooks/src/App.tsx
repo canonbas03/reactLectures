@@ -32,10 +32,10 @@ function App() {
 
   const {
     fetchedData: userPlaces,
-    setFetchData: setUserPlaces,
+    setFetchedData: setUserPlaces,
     isFetching,
     error,
-    setError,
+    handleErrorState,
   } = useFetch<Place[]>(fetchUserPlaces, []);
 
   function handleStartRemovePlace(place: Place) {
@@ -91,9 +91,6 @@ function App() {
     [userPlaces],
   );
 
-  function handleErrorState() {
-    setError("");
-  }
   return (
     <>
       <Modal open={!!errorUpdatingPlaces} onClose={handleError}>
