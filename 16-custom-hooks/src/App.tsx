@@ -1,12 +1,13 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 
-import Places from "./components/Places.js";
-import Modal from "./components/Modal.js";
-import DeleteConfirmation from "./components/DeleteConfirmation.js";
+import Places from "./components/Places.jsx";
+import Modal from "./components/Modal.jsx";
+import DeleteConfirmation from "./components/DeleteConfirmation.jsx";
 import logoImg from "./assets/logo.png";
-import AvailablePlaces from "./components/AvailablePlaces.js";
+import AvailablePlaces from "./components/AvailablePlaces.jsx";
 import { fetchUserPlaces, updateUserPlaces } from "./http.js";
-import ErrorComponent from "./components/Error.js";
+import ErrorComponent from "./components/Error";
+import useFetch from "../../16-custom-hooks/src/hooks/useFetch.js";
 
 export type Place = {
   id: string;
@@ -22,32 +23,20 @@ export type Place = {
 function App() {
   const selectedPlace = useRef<Place>();
 
-  const [userPlaces, setUserPlaces] = useState<Place[]>([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [errorUpdatingPlaces, setErrorUpdatingPlaces] = useState<string>("");
 
-  const [isFetching, setIsFetching] = useState(false);
-  const [error, setError] = useState<string>();
+  //const [userPlaces, setUserPlaces] = useState<Place[]>([]);
+  // const [isFetching, setIsFetching] = useState(false);
+  // const [error, setError] = useState<string>();
 
-  useEffect(() => {
-    async function fetchPlaces() {
-      setIsFetching(true);
-
-      try {
-        const places: Place[] = await fetchUserPlaces();
-
-        setUserPlaces(places);
-
-        setIsFetching(false);
-      } catch (error) {
-        if (error instanceof Error) setError(error.message || "Failed to fetch user places.");
-
-        setIsFetching(false);
-      }
-    }
-
-    fetchPlaces();
-  }, []);
+  const {
+    fetchedData: userPlaces,
+    setFetchData: setUserPlaces,
+    isFetching,
+    error,
+    setError,
+  } = useFetch<Place[]>(fetchUserPlaces, []);
 
   function handleStartRemovePlace(place: Place) {
     setModalIsOpen(true);
@@ -61,6 +50,7 @@ function App() {
   function handleError() {
     setErrorUpdatingPlaces("");
   }
+
   async function handleSelectPlace(selectedPlace: Place) {
     setUserPlaces((prevPickedPlaces) => {
       if (!prevPickedPlaces) {
@@ -102,7 +92,7 @@ function App() {
   );
 
   function handleErrorState() {
-    setError(undefined);
+    setError("");
   }
   return (
     <>
