@@ -4,8 +4,8 @@ import CartModal, { CartModalHandle } from "./CartModal";
 
 export default function Header() {
   const { items } = useContext(CartContext);
-  const modal = useRef<CartModalHandle>(null);
   const cartQuantity = items.length;
+  const modal = useRef<CartModalHandle>(null);
 
   function handleOpenCartClick() {
     if (modal.current) {

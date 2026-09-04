@@ -6,7 +6,7 @@ import {
   useRef,
 } from "react";
 import { createPortal } from "react-dom";
-import Cart, { ItemType } from "./Cart";
+import Cart from "./Cart";
 import { CartContext } from "../store/shopping-cart-context";
 
 export type CartModalHandle = {

@@ -1,14 +1,15 @@
 import { DUMMY_PRODUCTS } from "../dummy-products.js";
 import Product from "./Product";
 
-type ShopProps = {
-  children?: React.ReactNode;
-};
-export default function Shop({ children }: ShopProps) {
+export default function Shop() {
   return (
     <section id="shop">
       <h2>Elegant Clothing For Everyone</h2>
-      {children}
+      {DUMMY_PRODUCTS.map((product) => (
+        <li key={product.id}>
+          <Product {...product} />
+        </li>
+      ))}
       <ul id="products"></ul>
     </section>
   );
