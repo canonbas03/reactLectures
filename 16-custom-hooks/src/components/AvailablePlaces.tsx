@@ -10,19 +10,19 @@ type AvailablePlacesProps = {
   onSelectPlace: (place: Place) => void;
 };
 
-export default function AvailablePlaces({ onSelectPlace }: AvailablePlacesProps) {
-  const fetchSortedPlaces = useCallback(async function fetchSortedPlaces(): Promise<Place[]> {
-    const places = await fetchAvailablePlaces();
+async function fetchSortedPlaces(): Promise<Place[]> {
+  const places = await fetchAvailablePlaces();
 
-    return new Promise<Place[]>((resolve) => {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const sortedPlaces: Place[] = sortPlacesByDistance(places, position.coords.latitude, position.coords.longitude);
+  return new Promise<Place[]>((resolve) => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const sortedPlaces: Place[] = sortPlacesByDistance(places, position.coords.latitude, position.coords.longitude);
 
-        resolve(sortedPlaces);
-      });
+      resolve(sortedPlaces);
     });
-  }, []);
+  });
+}
 
+export default function AvailablePlaces({ onSelectPlace }: AvailablePlacesProps) {
   const {
     fetchedData: availablePlaces,
     isFetching: isLoading,

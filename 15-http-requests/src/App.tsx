@@ -37,11 +37,9 @@ function App() {
         const places: Place[] = await fetchUserPlaces();
 
         setUserPlaces(places);
-
-        setIsFetching(false);
       } catch (error) {
         if (error instanceof Error) setError(error.message || "Failed to fetch user places.");
-
+      } finally {
         setIsFetching(false);
       }
     }
@@ -102,7 +100,7 @@ function App() {
   );
 
   function handleErrorState() {
-    setError(undefined);
+    setError("");
   }
   return (
     <>
