@@ -1,9 +1,11 @@
 import { memo, useCallback, useMemo, useState } from "react";
 
-import IconButton from "../UI/IconButton.js";
-import MinusIcon from "../UI/Icons/MinusIcon.js";
-import PlusIcon from "../UI/Icons/PlusIcon.js";
-import CounterOutput from "./CounterOutput.js";
+import IconButton from "../UI/IconButton";
+import MinusIcon from "../UI/Icons/MinusIcon";
+import PlusIcon from "../UI/Icons/PlusIcon";
+import CounterOutput from "./CounterOutput";
+import CounterHistory from "./CounterHistory";
+
 import { log } from "../../log.js";
 
 function isPrime(number: number) {
@@ -22,38 +24,44 @@ function isPrime(number: number) {
 
   return true;
 }
+export type CountType = {
+  id: number;
+  value: number;
+};
 type CounterProps = {
-  initialCount: number;
+  initialCount: CountType;
 };
 const Counter = memo(function Counter({ initialCount }: CounterProps) {
   log("<Counter /> rendered", 1);
-  const initialCountIsPrime = useMemo(() => isPrime(initialCount), [initialCount]);
+  const initialCountIsPrime = useMemo(() => isPrime(initialCount.value), [initialCount]);
 
-  const [counter, setCounter] = useState(initialCount);
+  const [counterChanges, setCounterChanges] = useState([initialCount]);
+  const currentCounter = counterChanges.reduce((acc, current) => acc + current.value, 0);
 
   const handleDecrement = useCallback(function handleDecrement() {
-    setCounter((prevCounter) => prevCounter - 1);
+    setCounterChanges((prevCounter) => [{ id: Date.now(), value: -1 }, ...prevCounter]);
   }, []);
 
   const handleIncrement = useCallback(function handleIncrement() {
-    setCounter((prevCounter) => prevCounter + 1);
+    setCounterChanges((prevCounter) => [{ id: Date.now(), value: 1 }, ...prevCounter]);
   }, []);
 
   return (
     <section className="counter">
       <p className="counter-info">
-        The initial counter value was <strong>{initialCount}</strong>. It{" "}
+        The initial counter value was <strong>{initialCount.value}</strong>. It{" "}
         <strong>is {initialCountIsPrime ? "a" : "not a"}</strong> prime number.
       </p>
-      <p>
+      <div>
         <IconButton icon={MinusIcon} onClick={handleDecrement}>
           Decrement
         </IconButton>
-        <CounterOutput value={counter} />
+        <CounterOutput value={currentCounter} />
         <IconButton icon={PlusIcon} onClick={handleIncrement}>
           Increment
         </IconButton>
-      </p>
+        <CounterHistory history={counterChanges} />
+      </div>
     </section>
   );
 });

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import Counter from "./components/Counter/Counter.jsx";
+import Counter, { CountType } from "./components/Counter/Counter.jsx";
 import Header from "./components/Header.jsx";
 import { log } from "./log.js";
 import ConfigureCounter from "./components/Counter/ConfigureCounter.js";
@@ -8,10 +8,16 @@ import ConfigureCounter from "./components/Counter/ConfigureCounter.js";
 function App() {
   log("<App /> rendered");
 
-  const [chosenCount, setChosenCount] = useState(0);
+  const [chosenCount, setChosenCount] = useState<CountType>({
+    id: Date.now(),
+    value: 0,
+  });
 
   function handleSetCount(newCount: number) {
-    setChosenCount(newCount);
+    setChosenCount({
+      id: Date.now(),
+      value: newCount,
+    });
   }
 
   return (
@@ -19,7 +25,7 @@ function App() {
       <Header />
       <main>
         <ConfigureCounter onSet={handleSetCount}></ConfigureCounter>
-        <Counter initialCount={chosenCount} />
+        <Counter initialCount={chosenCount} key={chosenCount.id} />
       </main>
     </>
   );
